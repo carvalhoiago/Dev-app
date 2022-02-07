@@ -1,8 +1,8 @@
 import React, {useState} from "react"
 import {View, Text, StyleSheet, Image} from "react-native"
-import FlatButton from "../button";
+import FlatButton from "../../components/InitialScreen/button";
 
-export default function initialScreen(){
+export default function InitialScreen({navigation}){
     return(
         <View style={styles.container}>
            <Text style={styles.title}>Olá!</Text>
@@ -10,7 +10,7 @@ export default function initialScreen(){
             <FlatButton text='ADOTAR'/>
             <FlatButton text='AJUDAR'/>
             <FlatButton text='CADASTRAR ANIMAL'/>
-           <Text style={styles.login}>login</Text>
+           <Text style={styles.login} onPress = {()=> navigation.navigate('Login')} >login</Text>
            <Image
                 source={require('../../../assets/Meau_marca_2.png')}
                 style={styles.logo}
@@ -29,12 +29,13 @@ const styles = StyleSheet.create({
     title: {
         paddingLeft: 12,
         fontSize: 72,
+        marginTop: 56,
         textAlign: 'center',
         fontFamily:'Courgette_400Regular',
         color: '#ffd358',
     },
     subTittle: {
-        marginTop: 48,
+        marginTop: 8,
         marginBottom: 48,
         textAlign: 'center',
         fontSize: 16,
@@ -44,7 +45,7 @@ const styles = StyleSheet.create({
         marginTop: 48,
         marginBottom: 48,
         textAlign: 'center',
-        fontSize: 16,
+        fontSize: 50,
         color: '#88c9bf'
     },
     logo: {
