@@ -1,11 +1,11 @@
 import React, { Component } from "react"
 import {View, StyleSheet, TextInput} from "react-native"
-import EntrarButton from "../../components/Login/EntrarButton";
-import FacebookButton from "../../components/Login/FacebookButton";
-import GoogleButton from "../../components/Login/GoogleButton";
+import EntrarButton from "../../components/Login/entrarButton";
+import FacebookButton from "../../components/Login/facebookButton";
+import GoogleButton from "../../components/Login/googleButton";
 
 export default class App extends Component{
-
+e
     constructor(props) {
         super(props);
         
