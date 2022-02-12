@@ -5,7 +5,7 @@ import FacebookButton from "../../components/Login/facebookButton";
 import GoogleButton from "../../components/Login/googleButton";
 
 export default class App extends Component{
-e
+    
     constructor(props) {
         super(props);
         

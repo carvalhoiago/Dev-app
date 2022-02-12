@@ -6,7 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import InitialScreen from './src/pages/InitialScreen';
 import Login from './src/pages/Login'
-import { UserRegisterScreen } from './src/pages/UserRegister'
+import { UserRegister } from './src/pages/UserRegister'
 
 const Stack = createNativeStackNavigator()
 
@@ -23,8 +23,8 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name='Cadastro Pessoal' component={UserRegisterScreen}/>
         <Stack.Screen options={{headerShown: false}} name='InitialScreen' component={InitialScreen}/>
+        <Stack.Screen name='CadastroPessoal' component={UserRegister}/>
         <Stack.Screen name='Login' component={Login}/>
       </Stack.Navigator>
     </NavigationContainer>

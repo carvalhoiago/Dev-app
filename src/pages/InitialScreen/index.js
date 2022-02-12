@@ -10,6 +10,7 @@ export default function InitialScreen({navigation}){
             <FlatButton text='ADOTAR'/>
             <FlatButton text='AJUDAR'/>
             <FlatButton text='CADASTRAR ANIMAL'/>
+            <FlatButton onPress = {()=> navigation.navigate('CadastroPessoal')} text='CADASTRO PESSOAL'/>
            <Text style={styles.login} onPress = {()=> navigation.navigate('Login')} >login</Text>
            <Image
                 source={require('../../../assets/Meau_marca_2.png')}

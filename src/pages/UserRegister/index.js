@@ -1,9 +1,8 @@
 import React, { useState } from "react"
 import { View, StyleSheet, TextInput, Text, ScrollView, TouchableOpacity } from "react-native"
-import EntrarButton from "../../components/Login/entrarButton";
 import {PlusIcon} from '../../../assets/icons/plus'
 
-export const UserRegisterScreen = (props) => {
+export const UserRegister = (props) => {
 
   const [name, setName] = useState('');
   const [age, setAge] = useState();
