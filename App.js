@@ -1,7 +1,13 @@
 import { StyleSheet, View } from 'react-native';
 import { useFonts, Courgette_400Regular } from '@expo-google-fonts/courgette';  
 import AppLoading from 'expo-app-loading';
-import InitialScreen from './src/components/InitialScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import InitialScreen from './src/pages/InitialScreen';
+import Login from './src/pages/Login'
+
+const Stack = createNativeStackNavigator()
 
 export default function App() {
 
@@ -14,9 +20,12 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container}>
-      <InitialScreen></InitialScreen>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen options={{headerShown: false}} name='InitialScreen' component={InitialScreen}/>
+        <Stack.Screen name='Login' component={Login}/>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
@@ -24,7 +33,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#e0e5e5',
-    paddingTop: 80,
-    alignItems:'center'
+    paddingTop: 0,
+    marginTop: 50,
   },
 });
