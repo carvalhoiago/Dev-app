@@ -19,10 +19,9 @@ const style = StyleSheet.create({
         backgroundColor: '#ffd358',
         width: 200,
         shadowColor: 'black',
-        shadowOpacity: 1,
-        elevation: 10,
-        shadowRadius: 15 ,
-        shadowOffset : { width: 1, height: 13},
+        alignSelf: 'center',
+        alignContent: 'center',
+        justifyContent: 'center',
     },
     buttonText: {
         color: '#434343',

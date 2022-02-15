@@ -1,8 +1,9 @@
-import React, {useState} from "react"
-import {View, Text, StyleSheet, Image} from "react-native"
+import React from "react"
+import {View, Text, Image} from "react-native"
 import FlatButton from "../../components/InitialScreen/button";
+import styles from "./styles"
 
-export default function InitialScreen({navigation}){
+export const InitialScreen = (props) => {
     return(
         <View style={styles.container}>
            <Text style={styles.title}>Olá!</Text>
@@ -10,8 +11,8 @@ export default function InitialScreen({navigation}){
             <FlatButton text='ADOTAR'/>
             <FlatButton text='AJUDAR'/>
             <FlatButton text='CADASTRAR ANIMAL'/>
-            <FlatButton onPress = {()=> navigation.navigate('CadastroPessoal')} text='CADASTRO PESSOAL'/>
-           <Text style={styles.login} onPress = {()=> navigation.navigate('Login')} >login</Text>
+            <FlatButton onPress = {()=> props.navigation.navigate('UserRegister')} text='CADASTRO PESSOAL'/>
+           <Text style={styles.login} onPress = {()=> props.navigation.navigate('Login')} >login</Text>
            <Image
                 source={require('../../../assets/Meau_marca_2.png')}
                 style={styles.logo}
@@ -19,41 +20,3 @@ export default function InitialScreen({navigation}){
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#e0e5e5',
-        alignItems:'center'
-    },
-    
-    title: {
-        paddingLeft: 12,
-        fontSize: 72,
-        marginTop: 56,
-        textAlign: 'center',
-        fontFamily:'Courgette_400Regular',
-        color: '#ffd358',
-    },
-    subTittle: {
-        marginTop: 8,
-        marginBottom: 48,
-        textAlign: 'center',
-        fontSize: 16,
-        color: '#757575'
-    },
-    login: {
-        marginTop: 48,
-        marginBottom: 48,
-        textAlign: 'center',
-        fontSize: 50,
-        color: '#88c9bf'
-    },
-    logo: {
-        marginTop: 68,
-        marginBottom: 32,
-        width: 122,
-        height: 44
-    }
-  });
-  
