@@ -11,7 +11,7 @@ export const InitialScreen = (props) => {
             <FlatButton text='ADOTAR'/>
             <FlatButton text='AJUDAR'/>
             <FlatButton text='CADASTRAR ANIMAL'/>
-            <FlatButton onPress = {()=> props.navigation.navigate('CadastroPessoal')} text='CADASTRO PESSOAL'/>
+            <FlatButton onPress = {()=> props.navigation.navigate('UserRegister')} text='CADASTRO PESSOAL'/>
            <Text style={styles.login} onPress = {()=> props.navigation.navigate('Login')} >login</Text>
            <Image
                 source={require('../../../assets/Meau_marca_2.png')}
