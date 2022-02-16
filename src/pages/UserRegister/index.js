@@ -2,6 +2,8 @@ import React, { useState } from "react"
 import { View, TextInput, Text, ScrollView, TouchableOpacity } from "react-native"
 import {PlusIcon} from '../../../assets/icons/plus'
 import styles from "./styles"
+import { createUserWithEmailAndPassword } from "firebase/auth"
+import { auth } from "../../../firebase"
 
 export const UserRegister = (props) => {
 
@@ -15,6 +17,14 @@ export const UserRegister = (props) => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
+
+  async function createUser() {
+    await createUserWithEmailAndPassword(auth, email, password)
+    .then(value => {
+      console.log('usuario cadastrado com sucesso!\n' + value.user.email);
+    })
+    .catch(error => console.log(error));
+  };
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -115,7 +125,9 @@ export const UserRegister = (props) => {
             <Text style={styles.photoText}>Adicionar foto</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.buttonBox}>
+        <TouchableOpacity 
+          style={styles.buttonBox}
+          onPress={() => createUser()}>
           <Text style={styles.buttonText}>FAZER CADASTRO</Text>
         </TouchableOpacity>
       </View>
