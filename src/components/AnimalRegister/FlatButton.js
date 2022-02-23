@@ -30,10 +30,7 @@ const style = (buttonColor, buttonColorText) =>
       width: 110,
       height: 50,
       shadowColor: "black",
-      shadowOpacity: 1,
-      elevation: 10,
-      shadowRadius: 15,
-      shadowOffset: { width: 1, height: 13 },
+      elevation: 5,
     },
     buttonText: {
       color: buttonColorText,

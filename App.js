@@ -30,7 +30,6 @@ export default function App() {
           component={InitialScreen}
         />
         <Stack.Screen name="CadastroPessoal" component={UserRegister} />
-        <Stack.Screen name="Login" component={Login} />
         <Stack.Screen
           name="UserRegister"
           options={{
