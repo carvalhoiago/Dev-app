@@ -24,7 +24,7 @@ export const AnimalRegister = () => {
   const [helpButton, setHelpButton] = useState(false);
 
   const [title, setTitle] = useState("Adoção");
-  const [name, setName] = useState("nome do animal");
+  const [name, setName] = useState("");
 
   const [isDog, setIsDog] = useState(false);
   const [isCat, setIsCat] = useState(false);
@@ -49,11 +49,9 @@ export const AnimalRegister = () => {
   const [isCastrated, setIsCastrated] = useState(false);
   const [isSick, setIsSick] = useState(false);
 
-  const [sickness, setSickness] = useState("Doenças do animal");
+  const [sickness, setSickness] = useState("");
   const [options, setOptions] = useState(<Adoption />);
-  const [aboutTheAnimal, setAboutTheAnimal] = useState(
-    "Compartilhe a história do animal"
-  );
+  const [aboutTheAnimal, setAboutTheAnimal] = useState("");
   const [buttonTitle, setButtonTitle] = useState("COLOCAR PARA ADOÇÃO");
 
   const handleAdoptionButtonClick = () => {
@@ -84,7 +82,7 @@ export const AnimalRegister = () => {
   };
 
   return (
-    <ScrollView>
+    <ScrollView style={styles.container}>
       <View style={styles.options}>
         <Text style={styles.infoText}>
           Tenho interesse em cadastrar o animal para:
