@@ -9,6 +9,8 @@ export const Checkbox = (props) => {
         style={styles.checkboxBox}
         value={props.value}
         onValueChange={props.onChange}
+        color={props.value ? "#f7a800" : undefined}
+        disabled={props.isDisabled ? true : false}
       />
       <Text style={styles.checkboxText}>{props.name}</Text>
     </View>

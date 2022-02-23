@@ -14,11 +14,14 @@ import FlatButton from "../../components/AnimalRegister/FlatButton";
 import Checkbox from "../../components/AnimalRegister/Checkbox";
 import RadioButton from "../../components/AnimalRegister/RadioButton";
 
+import Adoption from "../../components/AnimalRegister/Adoption";
+
 export const AnimalRegister = () => {
   const [adoptionButton, setAdoptionButton] = useState(true);
   const [godfatherButton, setGodfatherButton] = useState(false);
   const [helpButton, setHelpButton] = useState(false);
 
+  const [title, setTitle] = useState("Adoção");
   const [name, setName] = useState("nome do animal");
 
   const [isDog, setIsDog] = useState(false);
@@ -45,31 +48,33 @@ export const AnimalRegister = () => {
   const [isSick, setIsSick] = useState(false);
 
   const [sickness, setSickness] = useState("Doenças do animal");
-
-  const [isTermOfSponsorship, setIsTermOfSponsorship] = useState(false);
-  const [isMoney, setIsMoney] = useState(false);
-  const [isVisits, setIsVisits] = useState(false);
-
+  const [options, setOptions] = useState(<Adoption />);
   const [aboutTheAnimal, setAboutTheAnimal] = useState(
     "Compartilhe a história do animal"
   );
+  const [buttonTitle, setButtonTitle] = useState("COLOCAR PARA ADOÇÃO");
 
   const handleAdoptionButtonClick = () => {
     setAdoptionButton(true);
     setGodfatherButton(false);
     setHelpButton(false);
+    setTitle("Adoção");
+    setOptions(<Adoption />);
+    setButtonTitle("COLOCAR PARA ADOÇÃO");
   };
 
   const handleGodfatherButtonClick = () => {
     setAdoptionButton(false);
     setGodfatherButton(true);
     setHelpButton(false);
+    setTitle("Apadrinhar");
   };
 
   const handleHelpButtonClick = () => {
     setAdoptionButton(false);
     setGodfatherButton(false);
     setHelpButton(true);
+    setTitle("Ajudar");
   };
 
   return (
@@ -97,7 +102,7 @@ export const AnimalRegister = () => {
         </View>
       </View>
       <View style={styles.nameBox}>
-        <Text style={styles.title}>Ajudar</Text>
+        <Text style={styles.title}>{title}</Text>
         <Text style={styles.inputLabel}>NOME DO ANIMAL</Text>
         <TextInput
           autoCorrect={false}
@@ -257,24 +262,7 @@ export const AnimalRegister = () => {
           style={styles.input}
         />
       </View>
-      <View style={styles.checkboxContainer}>
-        <Text style={styles.checkboxLabel}>EXIGÊNCIAS PARA APADRINHAMENTO</Text>
-        <Checkbox
-          name="Termo de apadrinhamento"
-          value={isTermOfSponsorship}
-          onChange={() => setIsTermOfSponsorship(!isTermOfSponsorship)}
-        />
-        <Checkbox
-          name="Auxílio financeiro"
-          value={isMoney}
-          onChange={() => setIsMoney(!isMoney)}
-        />
-        <Checkbox
-          name="Visitas ao animal"
-          value={isVisits}
-          onChange={() => setIsVisits(!isVisits)}
-        />
-      </View>
+      {options}
       <View style={styles.nameBox}>
         <Text style={styles.inputLabel}>SOBRE O ANIMAL</Text>
         <TextInput
@@ -287,7 +275,7 @@ export const AnimalRegister = () => {
         />
       </View>
       <TouchableOpacity style={styles.buttonBox}>
-        <Text style={styles.buttonText}>FAZER CADASTRO</Text>
+        <Text style={styles.buttonText}>{buttonTitle}</Text>
       </TouchableOpacity>
     </ScrollView>
   );
