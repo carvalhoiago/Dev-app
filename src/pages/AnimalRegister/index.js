@@ -16,6 +16,7 @@ import RadioButton from "../../components/AnimalRegister/RadioButton";
 
 import Adoption from "../../components/AnimalRegister/Adoption";
 import Sponsorship from "../../components/AnimalRegister/Sponsorship";
+import Help from "../../components/AnimalRegister/Help";
 
 export const AnimalRegister = () => {
   const [adoptionButton, setAdoptionButton] = useState(true);
@@ -78,6 +79,8 @@ export const AnimalRegister = () => {
     setGodfatherButton(false);
     setHelpButton(true);
     setTitle("Ajudar");
+    setOptions(<Help />);
+    setButtonTitle("PROCURAR AJUDA");
   };
 
   return (
