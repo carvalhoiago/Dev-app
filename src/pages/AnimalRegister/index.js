@@ -15,6 +15,7 @@ import Checkbox from "../../components/AnimalRegister/Checkbox";
 import RadioButton from "../../components/AnimalRegister/RadioButton";
 
 import Adoption from "../../components/AnimalRegister/Adoption";
+import Sponsorship from "../../components/AnimalRegister/Sponsorship";
 
 export const AnimalRegister = () => {
   const [adoptionButton, setAdoptionButton] = useState(true);
@@ -68,6 +69,8 @@ export const AnimalRegister = () => {
     setGodfatherButton(true);
     setHelpButton(false);
     setTitle("Apadrinhar");
+    setOptions(<Sponsorship />);
+    setButtonTitle("PROCURAR PADRINHO");
   };
 
   const handleHelpButtonClick = () => {
