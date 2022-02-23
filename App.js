@@ -4,8 +4,9 @@ import AppLoading from "expo-app-loading";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import InitialScreen from "./src/pages/InitialScreen";
-import Login from "./src/pages/Login";
+import { Home } from "./src/pages/Home";
+import { InitialScreen } from "./src/pages/InitialScreen";
+import { Login } from "./src/pages/Login";
 import { UserRegister } from "./src/pages/UserRegister";
 import { AnimalRegister } from "./src/pages/AnimalRegister";
 
@@ -29,8 +30,23 @@ export default function App() {
           component={InitialScreen}
         />
         <Stack.Screen name="CadastroPessoal" component={UserRegister} />
-        <Stack.Screen name="Cadastro do Animal" component={AnimalRegister} />
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen
+          name="UserRegister"
+          options={{
+            title: "Registro Pessoal",
+          }}
+          component={UserRegister}
+        />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen
+          name="AnimalRegister"
+          options={{
+            title: "Cadastro do Animal",
+          }}
+          component={AnimalRegister}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import React from "react";
+import { View, Text, Image } from "react-native";
 import FlatButton from "../../components/InitialScreen/button";
+import styles from "./styles";
 
 export default function InitialScreen({ navigation }) {
   return (
@@ -13,14 +14,17 @@ export default function InitialScreen({ navigation }) {
       <FlatButton text="ADOTAR" />
       <FlatButton text="AJUDAR" />
       <FlatButton
-        onPress={() => navigation.navigate("Cadastro do Animal")}
+        onPress={() => props.navigation.navigate("AnimalRegister")}
         text="CADASTRAR ANIMAL"
       />
       <FlatButton
-        onPress={() => navigation.navigate("CadastroPessoal")}
+        onPress={() => props.navigation.navigate("UserRegister")}
         text="CADASTRO PESSOAL"
       />
-      <Text style={styles.login} onPress={() => navigation.navigate("Login")}>
+      <Text
+        style={styles.login}
+        onPress={() => props.navigation.navigate("Login")}
+      >
         login
       </Text>
       <Image
