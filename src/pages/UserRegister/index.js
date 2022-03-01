@@ -3,7 +3,8 @@ import { View, TextInput, Text, ScrollView, TouchableOpacity } from "react-nativ
 import {PlusIcon} from '../../../assets/icons/plus'
 import styles from "./styles"
 import { createUserWithEmailAndPassword } from "firebase/auth"
-import { auth } from "../../../firebase"
+import { auth, db } from "../../../firebase"
+import { doc, setDoc } from 'firebase/firestore'
 
 export const UserRegister = (props) => {
 
@@ -12,7 +13,7 @@ export const UserRegister = (props) => {
   const [email, setEmail] = useState('');
   const [state, setState] = useState('');
   const [city, setCity] = useState('');
-  const [adress, setAdress] = useState('');
+  const [address, setAddress] = useState('');
   const [phone, setPhone] = useState();
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
@@ -20,8 +21,19 @@ export const UserRegister = (props) => {
 
   async function createUser() {
     await createUserWithEmailAndPassword(auth, email, password)
-    .then(value => {
+    .then(async (value) => {
+      console.log(value.user)
+      await setDoc(doc(db, "users", value.user.uid), {
+        name: name,
+        age: age,
+        state: state,
+        city: city,
+        address: address,
+        phone: phone,
+        userName: userName,
+      })
       console.log('usuario cadastrado com sucesso!\n' + value.user.email);
+      props.navigation.navigate('InitialScreen')
     })
     .catch(error => console.log(error));
   };
@@ -80,8 +92,8 @@ export const UserRegister = (props) => {
         />
         <TextInput
           autoCorrect={false}
-          value={adress}
-          onChangeText={(adress) => setAdress(adress)}
+          value={address}
+          onChangeText={(address) => setAddress(address)}
           underlineColorAndroid='transparent'
           placeholder={'Endereço'}
           style={styles.input}
