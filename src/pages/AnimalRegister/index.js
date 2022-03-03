@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-
+import { collection, addDoc } from 'firebase/firestore'
+import { db } from "../../../firebase"
 import { styles } from "./styles";
 import { PlusIcon } from "../../../assets/icons/plus";
 
@@ -18,7 +19,7 @@ import Adoption from "../../components/AnimalRegister/Adoption";
 import Sponsorship from "../../components/AnimalRegister/Sponsorship";
 import Help from "../../components/AnimalRegister/Help";
 
-export const AnimalRegister = () => {
+export const AnimalRegister = (props) => {
   const [adoptionButton, setAdoptionButton] = useState(true);
   const [godfatherButton, setGodfatherButton] = useState(false);
   const [helpButton, setHelpButton] = useState(false);
@@ -53,6 +54,38 @@ export const AnimalRegister = () => {
   const [options, setOptions] = useState(<Adoption />);
   const [aboutTheAnimal, setAboutTheAnimal] = useState("");
   const [buttonTitle, setButtonTitle] = useState("COLOCAR PARA ADOÇÃO");
+
+  async function createAnimal() {
+    await addDoc(collection(db, "animals"), {
+      name: name,
+      isDog: isDog,
+      isCat: isCat,
+      isMale: isMale,
+      isFemale: isFemale,
+      isSmall: isSmall,
+      isMedium: isMedium,
+      isBig: isBig,
+      isYoung: isYoung,
+      isAdult: isAdult,
+      isOld: isOld,
+      isPlayful: isPlayful,
+      isShy: isShy,
+      isCalm: isCalm,
+      isGuard: isGuard,
+      isLoving: isLoving,
+      isLazy: isLazy,
+      isVaccinated: isVaccinated,
+      isWormed: isWormed,
+      isCastrated: isCastrated,
+      isSick: isSick,
+      sickness: sickness,
+      options: title,
+      aboutTheAnimal: aboutTheAnimal,
+    }).then(value => {
+      console.log('animal cadastrado com sucesso!\n');
+      props.navigation.navigate('InitialScreen')
+    }).catch(e => console.log(e))
+  };
 
   const handleAdoptionButtonClick = () => {
     setAdoptionButton(true);
@@ -279,7 +312,7 @@ export const AnimalRegister = () => {
         />
       </View>
       <TouchableOpacity style={styles.buttonBox}>
-        <Text style={styles.buttonText}>{buttonTitle}</Text>
+        <Text style={styles.buttonText} onPress={()=>createAnimal()}>{buttonTitle}</Text>
       </TouchableOpacity>
     </ScrollView>
   );
