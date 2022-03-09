@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   Text,
@@ -10,6 +10,7 @@ import { collection, addDoc } from 'firebase/firestore'
 import { db } from "../../../firebase"
 import { styles } from "./styles";
 import { PlusIcon } from "../../../assets/icons/plus";
+import { auth } from '../../../firebase';
 
 import FlatButton from "../../components/AnimalRegister/FlatButton";
 import Checkbox from "../../components/AnimalRegister/Checkbox";
@@ -55,6 +56,14 @@ export const AnimalRegister = (props) => {
   const [aboutTheAnimal, setAboutTheAnimal] = useState("");
   const [buttonTitle, setButtonTitle] = useState("COLOCAR PARA ADOÇÃO");
 
+  useEffect(()=>{
+    console.log('oi', auth)
+    if (!auth.currentUser){
+      props.navigation.pop();
+      props.navigation.navigate('Login')
+    }
+  },[])
+
   async function createAnimal() {
     await addDoc(collection(db, "animals"), {
       name: name,
@@ -81,6 +90,7 @@ export const AnimalRegister = (props) => {
       sickness: sickness,
       options: title,
       aboutTheAnimal: aboutTheAnimal,
+      uid: auth.currentUser.uid,
     }).then(value => {
       console.log('animal cadastrado com sucesso!\n');
       props.navigation.navigate('InitialScreen')
