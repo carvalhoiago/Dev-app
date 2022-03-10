@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { View, TextInput, Text, ScrollView, TouchableOpacity } from "react-native"
+import { Alert, View, TextInput, Text, ScrollView, TouchableOpacity } from "react-native"
 import {PlusIcon} from '../../../assets/icons/plus'
 import styles from "./styles"
 import { createUserWithEmailAndPassword } from "firebase/auth"
@@ -9,7 +9,7 @@ import { doc, setDoc } from 'firebase/firestore'
 export const UserRegister = (props) => {
 
   const [name, setName] = useState('');
-  const [age, setAge] = useState();
+  const [age, setAge] = useState('');
   const [email, setEmail] = useState('');
   const [state, setState] = useState('');
   const [city, setCity] = useState('');
@@ -25,7 +25,7 @@ export const UserRegister = (props) => {
       console.log(value.user)
       await setDoc(doc(db, "users", value.user.uid), {
         name: name,
-        age: age,
+        age: parseInt(age),
         state: state,
         city: city,
         address: address,
@@ -33,7 +33,13 @@ export const UserRegister = (props) => {
         userName: userName,
       })
       console.log('usuario cadastrado com sucesso!\n' + value.user.email);
-      props.navigation.navigate('InitialScreen')
+      Alert.alert(
+        "Usuário cadastrato com sucesso",
+        "Pressione OK para ir para a tela inicial",
+        [
+          { text: "OK", onPress: () => props.navigation.navigate('InitialScreen') }
+        ]
+      );
     })
     .catch(error => console.log(error));
   };
@@ -61,7 +67,7 @@ export const UserRegister = (props) => {
           autoCorrect={false}
           value={age}
           keyboardType='numeric'
-          onChangeText={(age) => setAge(parseInt(age))}
+          onChangeText={(age) => setAge(age)}
           underlineColorAndroid='transparent'
           placeholder={'Idade'}
           style={styles.input}

@@ -14,10 +14,6 @@ export const InitialScreen = (props) => {
       <FlatButton text="ADOTAR" />
       <FlatButton text="AJUDAR" />
       <FlatButton
-        onPress={() => props.navigation.navigate("AnimalRegister")}
-        text="CADASTRAR ANIMAL"
-      />
-      <FlatButton
         onPress={() => props.navigation.navigate("UserRegister")}
         text="CADASTRO PESSOAL"
       />

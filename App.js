@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { useFonts, Courgette_400Regular } from "@expo-google-fonts/courgette";
 import AppLoading from "expo-app-loading";
 import { NavigationContainer } from "@react-navigation/native";
@@ -38,7 +38,13 @@ export default function App() {
           component={UserRegister}
         />
         <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen 
+          options={{
+            headerShown: false
+          }}
+          name="Home" 
+          component={Home}
+          />
         <Stack.Screen
           name="AnimalRegister"
           options={{

@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import {Alert, ScrollView, Text, TextInput, TouchableOpacity, View} from "react-native";
 import { collection, addDoc } from 'firebase/firestore'
 import { db } from "../../../firebase"
 import { styles } from "./styles";
@@ -55,45 +49,53 @@ export const AnimalRegister = (props) => {
   const [options, setOptions] = useState(<Adoption />);
   const [aboutTheAnimal, setAboutTheAnimal] = useState("");
   const [buttonTitle, setButtonTitle] = useState("COLOCAR PARA ADOÇÃO");
-
-  useEffect(()=>{
-    console.log('oi', auth)
-    if (!auth.currentUser){
-      props.navigation.pop();
-      props.navigation.navigate('Login')
-    }
-  },[])
-
+  
   async function createAnimal() {
     await addDoc(collection(db, "animals"), {
       name: name,
-      isDog: isDog,
-      isCat: isCat,
       isMale: isMale,
       isFemale: isFemale,
-      isSmall: isSmall,
-      isMedium: isMedium,
-      isBig: isBig,
-      isYoung: isYoung,
-      isAdult: isAdult,
-      isOld: isOld,
-      isPlayful: isPlayful,
-      isShy: isShy,
-      isCalm: isCalm,
-      isGuard: isGuard,
-      isLoving: isLoving,
-      isLazy: isLazy,
-      isVaccinated: isVaccinated,
-      isWormed: isWormed,
-      isCastrated: isCastrated,
-      isSick: isSick,
-      sickness: sickness,
-      options: title,
+      ownerUid: auth.currentUser.uid,
+      for: title,
       aboutTheAnimal: aboutTheAnimal,
-      uid: auth.currentUser.uid,
+      breed: {
+        isDog: isDog,
+        isCat: isCat,
+      },
+      size: {
+        isSmall: isSmall,
+        isMedium: isMedium,
+        isBig: isBig,
+      },
+      Age: {
+        isYoung: isYoung,
+        isAdult: isAdult,
+        isOld: isOld,
+      },
+      temperament: {
+        isPlayful: isPlayful,
+        isShy: isShy,
+        isCalm: isCalm,
+        isGuard: isGuard,
+        isLoving: isLoving,
+        isLazy: isLazy,
+      },
+      health: {
+        isVaccinated: isVaccinated,
+        isWormed: isWormed,
+        isCastrated: isCastrated,
+        isSick: isSick,
+        sickness: sickness,
+      },
     }).then(value => {
       console.log('animal cadastrado com sucesso!\n');
-      props.navigation.navigate('InitialScreen')
+      Alert.alert(
+        "Animal cadastrato com sucesso",
+        "Pressione OK para ir para a tela inicial",
+        [
+          { text: "OK", onPress: () => props.navigation.navigate('Home') }
+        ]
+      );
     }).catch(e => console.log(e))
   };
 
