@@ -9,6 +9,7 @@ import { InitialScreen } from "./src/pages/InitialScreen";
 import { Login } from "./src/pages/Login";
 import { UserRegister } from "./src/pages/UserRegister";
 import { AnimalRegister } from "./src/pages/AnimalRegister";
+import { MyPets } from "./src/pages/MyPets";
 
 const Stack = createNativeStackNavigator();
 
@@ -51,6 +52,13 @@ export default function App() {
             title: "Cadastro do Animal",
           }}
           component={AnimalRegister}
+        />
+        <Stack.Screen
+          name="MyPets"
+          options={{
+            title: "Meus Pets",
+          }}
+          component={MyPets}
         />
       </Stack.Navigator>
     </NavigationContainer>
