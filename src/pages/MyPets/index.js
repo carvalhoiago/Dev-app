@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ActivityIndicator, View, Text, Image, FlatList } from "react-native";
-import FlatButton from "../../components/InitialScreen/button";
+import { ActivityIndicator, View, Text, Image, FlatList, TouchableOpacity } from "react-native";
 import styles from "./styles";
 import { db } from "../../../firebase"
 import { auth } from "../../../firebase";
@@ -40,18 +39,20 @@ export const MyPets = (props) => {
         data={mypets}
         keyExtractor = {(item) => item.key}
         renderItem={( {item} ) => (
-           <View style={ styles.container }>
-            <Text>Pet Name: {item.name}</Text>
-            <Text>Pet id: {item.key}</Text>
-         </View>
+            <View style={ styles.container }>
+               <TouchableOpacity style={styles.card}>
+                 <Text style={styles.cardTitle}> {item.name}</Text>
+                <Image 
+                  style={styles.cardImage}
+                  source={require("../../../assets/cat.jpeg")}>
+                 </Image>
+                 <Text style={styles.cardText}> Descrição</Text>
+                 <Text style={styles.cardText}> Descrição</Text>
+               </TouchableOpacity>
+            </View>
         )}
       />
-
-      <Image
-        source={require("../../../assets/Meau_marca_2.png")}
-        style={styles.logo}
-      />
-      
+     
     </View>
   );
 }
