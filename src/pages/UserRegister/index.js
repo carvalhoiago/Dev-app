@@ -1,10 +1,29 @@
-import React, { useState } from "react"
-import { Alert, View, TextInput, Text, ScrollView, TouchableOpacity } from "react-native"
+import React, { useState, useEffect } from "react"
+import {
+  Alert,
+  View,
+  TextInput,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+} from "react-native"
 import {PlusIcon} from '../../../assets/icons/plus'
 import styles from "./styles"
 import { createUserWithEmailAndPassword } from "firebase/auth"
 import { auth, db } from "../../../firebase"
 import { doc, setDoc } from 'firebase/firestore'
+import * as ImagePicker from 'expo-image-picker';
+
+const Imagestyles = StyleSheet.create({
+  /* Other styles hidden to keep the example brief... */
+  thumbnail: {
+    width: 300,
+    height: 300,
+    resizeMode: "contain"
+  }
+});
 
 export const UserRegister = (props) => {
 
@@ -18,6 +37,25 @@ export const UserRegister = (props) => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  let openImagePickerAsync = async () => {
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+   
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+
+    setSelectedImage({ localUri: pickerResult.uri });
+  }
+  
 
   async function createUser() {
     await createUserWithEmailAndPassword(auth, email, password)
@@ -138,7 +176,7 @@ export const UserRegister = (props) => {
         />
         <Text style={styles.title}>FOTO DE PERFIL</Text>
         <View style={styles.photoContainer}>
-          <TouchableOpacity style={styles.photoBox}>
+          <TouchableOpacity style={styles.photoBox} onPress={openImagePickerAsync}>
             <PlusIcon />
             <Text style={styles.photoText}>Adicionar foto</Text>
           </TouchableOpacity>
@@ -149,6 +187,18 @@ export const UserRegister = (props) => {
           <Text style={styles.buttonText}>FAZER CADASTRO</Text>
         </TouchableOpacity>
       </View>
+    {
+      selectedImage !== null ? (
+        <View>
+        <Image
+          source={{ uri: selectedImage.localUri }}
+          style={Imagestyles.thumbnail}
+        />
+      </View>
+      ) : (
+        <></>
+      )
+    }
     </ScrollView>
   );
 }
