@@ -177,8 +177,21 @@ export const UserRegister = (props) => {
         <Text style={styles.title}>FOTO DE PERFIL</Text>
         <View style={styles.photoContainer}>
           <TouchableOpacity style={styles.photoBox} onPress={openImagePickerAsync}>
-            <PlusIcon />
-            <Text style={styles.photoText}>Adicionar foto</Text>
+            {
+              selectedImage !== null ? (
+                <View>
+                  <Image
+                    source={{ uri: selectedImage.localUri }}
+                    style={styles.photo}
+                  />
+                </View>
+              ) : (
+                <>
+                  <PlusIcon />
+                  <Text style={styles.photoText}>Adicionar foto</Text>
+                </>
+              )
+            }  
           </TouchableOpacity>
         </View>
         <TouchableOpacity 
@@ -187,18 +200,6 @@ export const UserRegister = (props) => {
           <Text style={styles.buttonText}>FAZER CADASTRO</Text>
         </TouchableOpacity>
       </View>
-    {
-      selectedImage !== null ? (
-        <View>
-        <Image
-          source={{ uri: selectedImage.localUri }}
-          style={Imagestyles.thumbnail}
-        />
-      </View>
-      ) : (
-        <></>
-      )
-    }
     </ScrollView>
   );
 }
