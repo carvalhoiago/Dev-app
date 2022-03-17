@@ -15,15 +15,23 @@ import { createUserWithEmailAndPassword } from "firebase/auth"
 import { auth, db } from "../../../firebase"
 import { doc, setDoc } from 'firebase/firestore'
 import * as ImagePicker from 'expo-image-picker';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getApps, initializeApp } from "firebase/app";
+import uuid from "uuid";
 
-const Imagestyles = StyleSheet.create({
-  /* Other styles hidden to keep the example brief... */
-  thumbnail: {
-    width: 300,
-    height: 300,
-    resizeMode: "contain"
-  }
-});
+const firebaseConfig = {
+  apiKey: "AIzaSyAr_TpAwfXko8O9xfuzHnit7v97h6RezgY",
+  authDomain: "meau-app-5ec8e.firebaseapp.com",
+  databaseURL: "gs://meau-app-5ec8e.appspot.com",
+  storageBucket: "meau-app-5ec8e.appspot.com",
+  messagingSenderId: "392470537422",
+};
+
+
+// Editing this file with fast refresh will reinitialize the app on every refresh, let's not do that
+if (!getApps().length) {
+  initializeApp(firebaseConfig);
+}
 
 export const UserRegister = (props) => {
 
@@ -70,6 +78,16 @@ export const UserRegister = (props) => {
         phone: phone,
         userName: userName,
       })
+      if (selectedImage !== null) {
+        try {
+          console.log('antes de enviar a imagem')
+          uploadImageAsync(selectedImage)
+        console.log('sucesso')
+        } catch {
+          console.log('erro ao fazer upload da imagem')
+        }
+        
+      }
       console.log('usuario cadastrado com sucesso!\n' + value.user.email);
       Alert.alert(
         "Usuário cadastrato com sucesso",
@@ -81,6 +99,32 @@ export const UserRegister = (props) => {
     })
     .catch(error => console.log(error));
   };
+
+  
+  async function uploadImageAsync(uri) {
+    // Why are we using XMLHttpRequest? See:
+    // https://github.com/expo/expo/issues/2402#issuecomment-443726662
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", uri, true);
+      xhr.send(null);
+    });
+  
+    const fileRef = ref(getStorage(), uuid.v4());
+    const result = await uploadBytes(fileRef, blob);
+  
+    // We're done with the blob, close and release it
+    blob.close();
+
+  }
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
