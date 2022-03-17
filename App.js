@@ -10,6 +10,7 @@ import { Login } from "./src/pages/Login";
 import { UserRegister } from "./src/pages/UserRegister";
 import { AnimalRegister } from "./src/pages/AnimalRegister";
 import { MyPets } from "./src/pages/MyPets";
+import { Adopt } from "./src/pages/Adopt";
 
 const Stack = createNativeStackNavigator();
 
@@ -59,6 +60,13 @@ export default function App() {
             title: "Meus Pets",
           }}
           component={MyPets}
+        />
+        <Stack.Screen
+          name="Adopt"
+          options={{
+            title: "Adotar",
+          }}
+          component={Adopt}
         />
       </Stack.Navigator>
     </NavigationContainer>

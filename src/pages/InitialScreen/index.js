@@ -11,7 +11,10 @@ export const InitialScreen = (props) => {
         Bem vindo ao Meau!{"\n"} Aqui você pode adotar, doar e ajudar {"\n"}{" "}
         cães e gatos com facilidade.{"\n"} Qual seu interesse?
       </Text>
-      <FlatButton text="ADOTAR" />
+      <FlatButton 
+        onPress={() => props.navigation.navigate("Adopt")}
+        text="ADOTAR" 
+      />
       <FlatButton text="AJUDAR" />
       <FlatButton
         onPress={() => props.navigation.navigate("UserRegister")}
