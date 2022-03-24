@@ -101,6 +101,12 @@ export const styles = StyleSheet.create({
     elevation: 5,
     shadowColor: "black",
   },
+  photo: {
+    flex: 1,
+    width: 150,
+    height: 150,
+    shadowColor: "black",
+  },
   photoText: {
     fontSize: 12,
     color: "#757575",

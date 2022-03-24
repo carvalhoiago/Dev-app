@@ -1,10 +1,20 @@
-import React, { useState, useEffect } from "react";
-import {Alert, ScrollView, Text, TextInput, TouchableOpacity, View} from "react-native";
-import { collection, addDoc } from 'firebase/firestore'
+import React, { useState } from "react";
+import {
+  Alert,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Image,
+} from "react-native";
+import { collection, addDoc, updateDoc, doc } from 'firebase/firestore'
 import { db } from "../../../firebase"
 import { styles } from "./styles";
 import { PlusIcon } from "../../../assets/icons/plus";
 import { auth } from '../../../firebase';
+import * as ImagePicker from 'expo-image-picker';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import FlatButton from "../../components/AnimalRegister/FlatButton";
 import Checkbox from "../../components/AnimalRegister/Checkbox";
@@ -49,6 +59,25 @@ export const AnimalRegister = (props) => {
   const [options, setOptions] = useState(<Adoption />);
   const [aboutTheAnimal, setAboutTheAnimal] = useState("");
   const [buttonTitle, setButtonTitle] = useState("COLOCAR PARA ADOÇÃO");
+
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  let openImagePickerAsync = async () => {
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+   
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+
+    setSelectedImage(pickerResult.uri);
+  }
   
   async function createAnimal() {
     await addDoc(collection(db, "animals"), {
@@ -87,7 +116,17 @@ export const AnimalRegister = (props) => {
         isSick: isSick,
         sickness: sickness,
       },
-    }).then(value => {
+    }).then(async value => {
+      console.log(value.id)
+      if (selectedImage !== null) {
+        try {
+          uploadImage(value.id)
+        } catch {
+          await updateDoc(doc(db, "animals", value.id), {
+            animalImage: null,
+          })
+        }
+      }
       console.log('animal cadastrado com sucesso!\n');
       Alert.alert(
         "Animal cadastrato com sucesso",
@@ -98,6 +137,35 @@ export const AnimalRegister = (props) => {
       );
     }).catch(e => console.log(e))
   };
+
+  const uploadImage = async (id) => {
+    const uploadUri = selectedImage;
+    const uriSplit = uploadUri.split('.');
+    const fileExtension = uriSplit[uriSplit.length - 1];
+
+    const response = await fetch(uploadUri);
+    const blob = await response.blob(); 
+
+    const storage = getStorage();
+    const storageRef = ref(storage);
+    const imageRef = ref(storageRef, `animalPictures/${id}.${fileExtension}`);
+
+    uploadBytes(imageRef, blob).then((snapshot) => {
+      console.log('Uploaded a blob or file!');
+      getDownloadURL(imageRef)
+      .then(async url =>  {
+        await updateDoc(doc(db, "animals", id), {
+          animalImage: url,
+        })
+      })
+      .catch(async e => {
+        console.log(e);
+        await updateDoc(doc(db, "animals", id), {
+          animalImage: null,
+        })
+      })
+    })
+  } 
 
   const handleAdoptionButtonClick = () => {
     setAdoptionButton(true);
@@ -165,9 +233,22 @@ export const AnimalRegister = (props) => {
       <View style={styles.photoWrapper}>
         <Text style={styles.inputLabel}>FOTOS DO ANIMAL</Text>
         <View style={styles.photoContainer}>
-          <TouchableOpacity style={styles.photoBox}>
-            <PlusIcon />
-            <Text style={styles.photoText}>adicionar fotos</Text>
+          <TouchableOpacity style={styles.photoBox} onPress={openImagePickerAsync}>
+          {
+              selectedImage !== null ? (
+                <View>
+                  <Image
+                    source={{ uri: selectedImage }}
+                    style={styles.photo}
+                  />
+                </View>
+              ) : (
+                <>
+                  <PlusIcon />
+                  <Text style={styles.photoText}>adicionar fotos</Text>
+                </>
+              )
+            } 
           </TouchableOpacity>
         </View>
       </View>

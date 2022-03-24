@@ -13,6 +13,8 @@ import { MyPets } from "./src/pages/MyPets";
 import { MyPetsDetails } from "./src/pages/MyPetsDetails";
 import { Adopt } from "./src/pages/Adopt";
 
+import { registerRootComponent } from 'expo';
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -87,3 +89,5 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
 });
+
+registerRootComponent(App);

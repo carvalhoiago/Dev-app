@@ -84,7 +84,13 @@ const styles = StyleSheet.create({
     photoText: {
       fontSize: 12,
       color: '#757575',
-    }
+    },
+    photo: {
+      flex: 1,
+      width: 128,
+      height: 128,
+      shadowColor: 'black',
+    },
   });
   
 export default styles
