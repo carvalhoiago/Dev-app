@@ -10,6 +10,8 @@ import { Login } from "./src/pages/Login";
 import { UserRegister } from "./src/pages/UserRegister";
 import { AnimalRegister } from "./src/pages/AnimalRegister";
 
+import { registerRootComponent } from 'expo';
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -65,3 +67,5 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
 });
+
+registerRootComponent(App);

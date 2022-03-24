@@ -13,9 +13,9 @@ import {PlusIcon} from '../../../assets/icons/plus'
 import styles from "./styles"
 import { createUserWithEmailAndPassword } from "firebase/auth"
 import { auth, db } from "../../../firebase"
-import { doc, setDoc } from 'firebase/firestore'
+import { doc, setDoc, updateDoc } from 'firebase/firestore'
 import * as ImagePicker from 'expo-image-picker';
-import * as storage from 'firebase/storage';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 
 export const UserRegister = (props) => {
@@ -31,6 +31,8 @@ export const UserRegister = (props) => {
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
+
+  
 
   let openImagePickerAsync = async () => {
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -53,7 +55,6 @@ export const UserRegister = (props) => {
   async function createUser() {
     await createUserWithEmailAndPassword(auth, email, password)
     .then(async (value) => {
-      console.log(value.user)
       await setDoc(doc(db, "users", value.user.uid), {
         name: name,
         age: parseInt(age),
@@ -65,11 +66,11 @@ export const UserRegister = (props) => {
       })
       if (selectedImage !== null) {
         try {
-          console.log('antes de enviar a imagem')
           uploadImage(value.user.uid)
-        console.log('sucesso')
         } catch {
-          console.log('erro ao fazer upload da imagem')
+          await updateDoc(doc(db, "users", value.user.uid), {
+            profileImage: null,
+          })
         }
         
       }
@@ -88,14 +89,31 @@ export const UserRegister = (props) => {
   
   const uploadImage = async (id) => {
     const uploadUri = selectedImage;
-    let filename = id;
+    const uriSplit = uploadUri.split('.');
+    const fileExtension = uriSplit[uriSplit.length - 1];
 
-    try {
-      await storage().ref(filename).putFile(uploadUri);
-      console.log("Upload de imagem com sucesso!")
-    } catch (e) {
-      console.log("erro no upload: ", e);
-    }
+    const response = await fetch(uploadUri);
+    const blob = await response.blob(); 
+
+    const storage = getStorage();
+    const storageRef = ref(storage);
+    const imageRef = ref(storageRef, `userProfilePictures/${id}.${fileExtension}`);
+
+    uploadBytes(imageRef, blob).then((snapshot) => {
+      console.log('Uploaded a blob or file!');
+      getDownloadURL(imageRef)
+      .then(async url =>  {
+        await updateDoc(doc(db, "users", id), {
+          profileImage: url,
+        })
+      })
+      .catch(async e => {
+        console.log(e);
+        await updateDoc(doc(db, "users", id), {
+          profileImage: null,
+        })
+      })
+    })
   } 
 
   return (
