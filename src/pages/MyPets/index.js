@@ -44,7 +44,7 @@ export const MyPets = (props) => {
                  <Text style={styles.cardTitle}> {item.name}</Text>
                 <Image 
                   style={styles.cardImage}
-                  source={require("../../../assets/cat.jpeg")}>
+                  source={item.animalImage ? {uri: item.animalImage} : require("../../../assets/cat.jpeg")}>
                  </Image>
                  <Text style={styles.cardText}> Descrição</Text>
                  <Text style={styles.cardText}> Descrição</Text>
