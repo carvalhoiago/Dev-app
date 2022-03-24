@@ -72,7 +72,6 @@ export const UserRegister = (props) => {
             profileImage: null,
           })
         }
-        
       }
       console.log('usuario cadastrado com sucesso!\n' + value.user.email);
       Alert.alert(
