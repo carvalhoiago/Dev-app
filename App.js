@@ -9,6 +9,10 @@ import { InitialScreen } from "./src/pages/InitialScreen";
 import { Login } from "./src/pages/Login";
 import { UserRegister } from "./src/pages/UserRegister";
 import { AnimalRegister } from "./src/pages/AnimalRegister";
+import { MyPets } from "./src/pages/MyPets";
+import { Adopt } from "./src/pages/Adopt";
+
+import { registerRootComponent } from 'expo';
 
 const Stack = createNativeStackNavigator();
 
@@ -52,6 +56,20 @@ export default function App() {
           }}
           component={AnimalRegister}
         />
+        <Stack.Screen
+          name="MyPets"
+          options={{
+            title: "Meus Pets",
+          }}
+          component={MyPets}
+        />
+        <Stack.Screen
+          name="Adopt"
+          options={{
+            title: "Adotar",
+          }}
+          component={Adopt}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -65,3 +83,5 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
 });
+
+registerRootComponent(App);

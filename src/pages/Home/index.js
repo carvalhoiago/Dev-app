@@ -28,6 +28,10 @@ export const Home = (props) => {
                onPress={() => props.navigation.navigate("AnimalRegister")}
                text="CADASTRAR ANIMAL"
            />
+           <FlatButton
+               onPress={() => props.navigation.navigate("MyPets")}
+               text="MEUS PETS"
+           />
            <TouchableOpacity 
             style={styles.buttonBox}
             onPress={() => logout()}>
