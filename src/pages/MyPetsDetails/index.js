@@ -15,6 +15,9 @@ export const MyPetsDetails = (props) => {
     : animal.Age.isAdult
     ? "Adulto"
     : "Filhote";
+  const isCastrated = animal.health.isCastrated ? "Sim" : "Não";
+  const isWormed = animal.health.isWormed ? "Sim" : "Não";
+  const isVaccinated = animal.health.isVaccinated ? "Sim" : "Não";
 
   console.log(animal);
 
@@ -22,7 +25,11 @@ export const MyPetsDetails = (props) => {
     <ScrollView style={styles.container}>
       <Image
         style={styles.image}
-        source={require("../../../assets/cat.jpeg")}
+        source={
+          animal.animalImage
+            ? { uri: animal.animalImage }
+            : require("../../../assets/cat.jpeg")
+        }
       />
       <View style={styles.infoContainer}>
         <Text style={styles.screenTitle}>{animal.name}</Text>
@@ -37,6 +44,22 @@ export const MyPetsDetails = (props) => {
         <View style={styles.textSection}>
           <Text style={styles.infoBlueText}>idade</Text>
           <Text style={styles.infoNormalText}>{age}</Text>
+        </View>
+        <View style={styles.textSection}>
+          <Text style={styles.infoBlueText}>castrado</Text>
+          <Text style={styles.infoNormalText}>{isCastrated}</Text>
+        </View>
+        <View style={styles.textSection}>
+          <Text style={styles.infoBlueText}>vermifugado</Text>
+          <Text style={styles.infoNormalText}>{isWormed}</Text>
+        </View>
+        <View style={styles.textSection}>
+          <Text style={styles.infoBlueText}>vacinado</Text>
+          <Text style={styles.infoNormalText}>{isVaccinated}</Text>
+        </View>
+        <View style={styles.textSection}>
+          <Text style={styles.infoBlueText}>{`mais sobre ${animal.name}`}</Text>
+          <Text style={styles.infoNormalText}>{animal.aboutTheAnimal}</Text>
         </View>
       </View>
     </ScrollView>
