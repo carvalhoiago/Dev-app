@@ -44,7 +44,7 @@ export const Adopt = (props) => {
                  <Text style={styles.cardTitle}> {item.name}</Text>
                 <Image 
                   style={styles.cardImage}
-                  source={require("../../../assets/cat.jpeg")}>
+                  source={item.animalImage ? {uri: item.animalImage} : require("../../../assets/cat.jpeg")}>
                  </Image>
                  <Text style={styles.cardText}> {item.isMale ? "Macho" : "Femea"} {"          "} {item.Age.isAdult ? "Adulto" : item.Age.isOld ? "Velho" : "Jovem"} {"          "} {item.size.isBig ? "Grande" : item.size.isMedium ? "Médio" : "Pequeno"} </Text>
                  <Text style={styles.cardText}> Endereço </Text>
