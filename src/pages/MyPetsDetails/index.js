@@ -1,15 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Image, Text, ScrollView, View, TouchableOpacity } from "react-native";
 import styles from "./styles";
 import { db } from "../../../firebase";
 import { auth } from "../../../firebase";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, query, where, doc, getDoc } from "firebase/firestore";
 import { PickerItem } from "react-native/Libraries/Components/Picker/Picker";
+import {sendAdoptNotification} from '../../services/notifications'
 
 export const MyPetsDetails = (props) => {
+  const [userData, setUserData] = useState({})
+  const [animalDeviceId, setAnimalDeviceId] = useState('')
   const user = auth.currentUser
-
   const animal = props.route.params.animal;
+
+  useEffect(()=>{
+    if(user && user.uid) {
+      const docRef = doc(db, "users", user.uid);
+      getDoc(docRef).then((docSnap)=>{
+        setUserData(docSnap.data())
+      })
+    }
+  },[user])
+
+  useEffect(()=>{
+    const docRef = doc(db, "users", animal.ownerUid);
+    getDoc(docRef).then((docSnap)=>{
+      setAnimalDeviceId(docSnap.data().deviceId || '')
+    })
+  },[animal])
+  
+
+
+  
   const sex = animal.isFemale ? "Fêmea" : "Macho";
   const size = animal.size.isBig
     ? "Grande"
@@ -68,8 +90,17 @@ export const MyPetsDetails = (props) => {
           <Text style={styles.infoNormalText}>{animal.aboutTheAnimal}</Text>
         </View>
       </View>
-      {(user && user.uid !== animal.ownerUid) && 
-        <TouchableOpacity style={styles.adoptButtom}>
+      {(user /*&& user.uid !== animal.ownerUid*/) && 
+        <TouchableOpacity
+          style={styles.adoptButtom}
+          onPress={
+            () => {
+              if (animalDeviceId !== '')
+                sendAdoptNotification(userData.name || '', animal.name || '', animalDeviceId)
+              else
+                console.log("Dispositivo nao encontrado")
+            }
+          }>
           <Text>PRETENDO ADOTAR</Text>
         </TouchableOpacity>
       }
