@@ -10,6 +10,7 @@ import { Login } from "./src/pages/Login";
 import { UserRegister } from "./src/pages/UserRegister";
 import { AnimalRegister } from "./src/pages/AnimalRegister";
 import { MyPets } from "./src/pages/MyPets";
+import { MyPetsDetails } from "./src/pages/MyPetsDetails";
 import { Adopt } from "./src/pages/Adopt";
 
 import { registerRootComponent } from 'expo';
@@ -42,13 +43,13 @@ export default function App() {
           component={UserRegister}
         />
         <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen 
+        <Stack.Screen
           options={{
-            headerShown: false
+            headerShown: false,
           }}
-          name="Home" 
+          name="Home"
           component={Home}
-          />
+        />
         <Stack.Screen
           name="AnimalRegister"
           options={{
@@ -62,6 +63,11 @@ export default function App() {
             title: "Meus Pets",
           }}
           component={MyPets}
+        />
+         <Stack.Screen
+          name="MyPetsDetails"
+          options={({ route }) => ({ title: route.params.animal.name })}
+          component={MyPetsDetails}
         />
         <Stack.Screen
           name="Adopt"
