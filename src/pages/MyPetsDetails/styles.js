@@ -36,6 +36,22 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "flex-start",
   },
+  adoptButtom: {
+    alignSelf: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 40,
+    width: 232,
+    backgroundColor: '#fdcf58',
+    borderRadius: 2,
+    marginBottom: 20,
+  },
+  adoptButtomText: {
+    fontFamily: 'Roboto Medium',
+    fontSize: 12,
+    color: '#434343',
+  },
 });
 
 export default styles;

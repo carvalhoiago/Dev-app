@@ -28,6 +28,7 @@ export const Adopt = (props) => {
       petslist.push({ ...doc.data(), key: doc.id });
     });
     setPetsForAdoption(petslist);
+    console.log(petslist)
     setLoading(false);
   }
 
@@ -46,7 +47,12 @@ export const Adopt = (props) => {
         keyExtractor={(item) => item.key}
         renderItem={({ item }) => (
           <View style={styles.container}>
-            <TouchableOpacity style={styles.card}>
+            <TouchableOpacity 
+              style={styles.card}
+              onPress={() =>
+                props.navigation.navigate("MyPetsDetails", { animal: item })
+              }
+              >
               <Text style={styles.cardTitle}> {item.name}</Text>
               <Image
                 style={styles.cardImage}
