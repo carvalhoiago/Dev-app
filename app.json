@@ -37,6 +37,7 @@
           "mode": "development"
         }
       ]
-    ]
+    ],
+    "scheme": "exp"
   }
 }
