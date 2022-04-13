@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import {
   Alert,
   View,
@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  StyleSheet,
 } from "react-native"
 import {PlusIcon} from '../../../assets/icons/plus'
 import styles from "./styles"

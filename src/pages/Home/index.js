@@ -3,7 +3,8 @@ import {View, Text, Image, TouchableOpacity} from "react-native"
 import styles from "./styles"
 
 import { signOut } from "firebase/auth"
-import { auth } from "../../../firebase";
+import { auth, db } from "../../../firebase";
+import { doc, setDoc, updateDoc } from 'firebase/firestore'
 
 import FlatButton from "../../components/InitialScreen/button";
 
@@ -13,9 +14,12 @@ export const Home = (props) => {
 
     async function logout(){
         await signOut(auth)
-        .then(() => {
+        .then(async () => {
             console.log('o usuario fez logout!');
-            props.navigation.navigate('InitialScreen');
+            await updateDoc(doc(db, "users", user.uid), {
+                deviceId: null,
+              })
+            props.navigation.replace('InitialScreen');
         })
         .catch(error => console.log(error))
     }
@@ -31,6 +35,10 @@ export const Home = (props) => {
            <FlatButton
                onPress={() => props.navigation.navigate("MyPets")}
                text="MEUS PETS"
+           />
+            <FlatButton
+               onPress={() => props.navigation.navigate("AdoptRequest")}
+               text="SOLICITAÇÃO DE ADOÇÃO"
            />
            <TouchableOpacity 
             style={styles.buttonBox}

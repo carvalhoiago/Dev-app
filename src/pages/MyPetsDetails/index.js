@@ -1,9 +1,62 @@
-import React from "react";
-import { Image, Text, ScrollView, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Image, Text, ScrollView, View, TouchableOpacity } from "react-native";
 import styles from "./styles";
+import { db } from "../../../firebase";
+import { auth } from "../../../firebase";
+import { collection, getDocs, query, where, doc, getDoc, addDoc } from "firebase/firestore";
+import {sendAdoptNotification} from '../../services/notifications'
 
 export const MyPetsDetails = (props) => {
+  const [userData, setUserData] = useState({})
+  const [animalDeviceId, setAnimalDeviceId] = useState('')
+  const user = auth.currentUser
   const animal = props.route.params.animal;
+
+  useEffect(()=>{
+    if(user && user.uid) {
+      const docRef = doc(db, "users", user.uid);
+      getDoc(docRef).then((docSnap)=>{
+        setUserData(docSnap.data())
+      })
+    }
+  },[user])
+
+  useEffect(()=>{
+    console.log(animal)
+    const docRef = doc(db, "users", animal.ownerUid);
+    getDoc(docRef).then((docSnap)=>{
+      setAnimalDeviceId(docSnap.data().deviceId || '')
+    })
+  },[animal])
+
+  const adoptPet = async () => {
+    await addDoc(collection(db, "adoptionrequests"), {
+      adopterName: userData.name,
+      adopterId: user.uid,
+      animalName: animal.name,
+      animalId: animal.key,
+      ownerUid: animal.ownerUid,
+      status: 'open',
+    }).then(async value => {
+      console.log(value.id)
+      if (animalDeviceId !== '')
+        sendAdoptNotification(userData.name || '', animal.name || '', animalDeviceId, value.id)
+      else
+        console.log("Dispositivo nao encontrado")
+      console.log('animal cadastrado com sucesso!\n');
+      Alert.alert(
+        "Animal solicitado com sucesso, aguarde a resposta do dono!",
+        "Pressione OK para ir para a tela inicial",
+        [
+          { text: "OK", onPress: () => props.navigation.navigate('Home') }
+        ]
+      );
+    }).catch(e => console.log(e))
+  }
+  
+
+
+  
   const sex = animal.isFemale ? "Fêmea" : "Macho";
   const size = animal.size.isBig
     ? "Grande"
@@ -62,6 +115,13 @@ export const MyPetsDetails = (props) => {
           <Text style={styles.infoNormalText}>{animal.aboutTheAnimal}</Text>
         </View>
       </View>
+      {(user /*&& user.uid !== animal.ownerUid*/) && 
+        <TouchableOpacity
+          style={styles.adoptButtom}
+          onPress={adoptPet}>
+          <Text>PRETENDO ADOTAR</Text>
+        </TouchableOpacity>
+      }
     </ScrollView>
   );
 };

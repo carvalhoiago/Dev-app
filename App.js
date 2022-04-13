@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { useEffect } from 'react';
 import { useFonts, Courgette_400Regular } from "@expo-google-fonts/courgette";
 import AppLoading from "expo-app-loading";
 import { NavigationContainer } from "@react-navigation/native";
@@ -12,22 +13,70 @@ import { AnimalRegister } from "./src/pages/AnimalRegister";
 import { MyPets } from "./src/pages/MyPets";
 import { MyPetsDetails } from "./src/pages/MyPetsDetails";
 import { Adopt } from "./src/pages/Adopt";
+import { AdoptRequest } from "./src/pages/AdoptRequest";
+import OneSignal from 'react-native-onesignal';
 
 import { registerRootComponent } from 'expo';
 
+import * as Linking from 'expo-linking';
+
+
 const Stack = createNativeStackNavigator();
+
+
 
 export default function App() {
   let [fontsLoaded, error] = useFonts({
     Courgette_400Regular,
   });
 
+  useEffect(() => {
+    //OneSignal Init Code
+    OneSignal.setLogLevel(6, 0);
+    OneSignal.setAppId('4289c303-3df9-4095-8792-c55f552d235b');
+    //END OneSignal Init Code
+
+    //Method for handling notifications received while app in foreground
+    OneSignal.setNotificationWillShowInForegroundHandler(
+      notificationReceivedEvent => {
+        console.log(
+          'OneSignal: notification will show in foreground:',
+          notificationReceivedEvent,
+        );
+        const notification = notificationReceivedEvent.getNotification();
+        console.log('notification: ', notification);
+        const data = notification.additionalData;
+        console.log('additionalData: ', data);
+        // Complete with null means don't show a notification.
+        notificationReceivedEvent.complete(notification);
+      },
+    );
+
+    //Method for handling notifications opened
+    OneSignal.setNotificationOpenedHandler(async openedEvent => {
+      console.log('OneSignal: notification opened:', openedEvent);
+    });
+
+  }, []);
+
   if (!fontsLoaded) {
     return <AppLoading />;
   }
 
+  const config = {
+    screens: {
+      AdoptRequest: 'adoptrequest/:id',
+      MyPets: 'mypets',
+    },
+  };
+
+  const linking = {
+    prefixes: ['com.carvalhoiago.meau://'], config,
+  };
+  
+
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <Stack.Navigator>
         <Stack.Screen
           options={{ headerShown: false }}
@@ -75,6 +124,13 @@ export default function App() {
             title: "Adotar",
           }}
           component={Adopt}
+        />
+        <Stack.Screen
+          name="AdoptRequest"
+          options={{
+            title: "Solicitação de Adoção",
+          }}
+          component={AdoptRequest}
         />
       </Stack.Navigator>
     </NavigationContainer>

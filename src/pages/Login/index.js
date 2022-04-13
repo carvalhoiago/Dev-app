@@ -5,7 +5,9 @@ import FacebookButton from "../../components/Login/facebookButton";
 import GoogleButton from "../../components/Login/googleButton";
 import styles from "./styles"
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../../firebase";
+import { auth, db } from "../../../firebase";
+import OneSignal from 'react-native-onesignal';
+import { doc, setDoc, updateDoc } from 'firebase/firestore'
 
 export const Login = (props) => {
     
@@ -16,7 +18,12 @@ export const Login = (props) => {
         await signInWithEmailAndPassword(auth, userName, password)
         .then(value => {
           console.log('usuario logado com sucesso! ' + value.user.email);
-          props.navigation.navigate('Home');
+          OneSignal.getDeviceState().then(async deviceState => {
+            await updateDoc(doc(db, "users", value.user.uid), {
+                deviceId: deviceState?.userId || null,
+              })
+          })
+          props.navigation.replace('Home');
         })
         .catch(error => console.log(error));
       };
