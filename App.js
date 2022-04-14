@@ -14,16 +14,15 @@ import { MyPets } from "./src/pages/MyPets";
 import { MyPetsDetails } from "./src/pages/MyPetsDetails";
 import { Adopt } from "./src/pages/Adopt";
 import { AdoptRequest } from "./src/pages/AdoptRequest";
+import { Chat } from "./src/pages/Chat";
+import { MyChats } from "./src/pages/MyChats";
 import OneSignal from 'react-native-onesignal';
 
 import { registerRootComponent } from 'expo';
 
 import * as Linking from 'expo-linking';
 
-
 const Stack = createNativeStackNavigator();
-
-
 
 export default function App() {
   let [fontsLoaded, error] = useFonts({
@@ -131,6 +130,20 @@ export default function App() {
             title: "Solicitação de Adoção",
           }}
           component={AdoptRequest}
+        />
+        <Stack.Screen
+          name="Chat"
+          options={{
+            title: "Chat",
+          }}
+          component={Chat}
+        />
+        <Stack.Screen
+          name="MyChats"
+          options={{
+            title: "Meus Chats",
+          }}
+          component={MyChats}
         />
       </Stack.Navigator>
     </NavigationContainer>

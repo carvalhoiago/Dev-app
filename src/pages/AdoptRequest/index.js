@@ -14,7 +14,7 @@ export const AdoptRequest = (props) => {
     var user = auth.currentUser;
 
     const id = props.route.params.id;
-
+    
     const [requestData, setRequestData] = useState({})
     const [requestDeviceId, setRequestDeviceId] = useState('')
 
@@ -79,7 +79,7 @@ export const AdoptRequest = (props) => {
                 text="Rejeitar"
             />
             <FlatButton
-                onPress={() => console.log('não implementado')}
+                onPress={() => props.navigation.navigate("Chat", {requestData : requestData, requestDeviceId : requestDeviceId} )}
                 text="Chat"
             />
             </>

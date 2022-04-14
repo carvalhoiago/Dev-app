@@ -37,8 +37,12 @@ export const Home = (props) => {
                text="MEUS PETS"
            />
             <FlatButton
-               onPress={() => props.navigation.navigate("AdoptRequest")}
-               text="SOLICITAÇÃO DE ADOÇÃO"
+               onPress={() => props.navigation.navigate("MyChats")}
+               text="MEUS CHATS"
+           />
+            <FlatButton
+               onPress={() => props.navigation.navigate("InitialScreen")}
+               text="HOME"
            />
            <TouchableOpacity 
             style={styles.buttonBox}
