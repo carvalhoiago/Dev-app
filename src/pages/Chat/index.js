@@ -1,31 +1,46 @@
-import {Alert, View, Text, Image, TouchableOpacity} from "react-native"
-import React, { useState, useCallback, useEffect, useLayoutEffect } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { GiftedChat } from 'react-native-gifted-chat'
 import { db } from "../../../firebase";
-import { collection, getDocs, query, where, doc, getDoc, addDoc, onSnapshot, orderBy } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where, 
+  addDoc,
+  onSnapshot,
+  orderBy
+} from "firebase/firestore";
 
 export const Chat = (props) => {
 
   const [messages, setMessages] = useState([]);
-  console.log(props.route.params)
+  console.log('params: ', props.route.params)
 
-  useLayoutEffect(() => {
-    const collectioRef = collection(db, 'chats')
-    const q = query(collectioRef, orderBy('createdAt', 'desc'))
-    const unsubscribe = onSnapshot(q, snapshot => {
+
+
+  useEffect(() => {
+    console.log(props.route.params.chatId)
+    const query2 = query(
+      collection(db, 'messages'), 
+      orderBy('createdAt', 'desc'),
+      where("chatId", "==", props.route.params.chatId)
+  );
+    const unsubscribe = onSnapshot(query2, snapshot => {
       setMessages(
         snapshot.docs.map(doc => ({
-          _id: doc.id,
+          _id: doc.data()._id,
           createdAt: doc.data().createdAt.toDate(),
           text: doc.data().text,
-          user: doc.data.user
+          user: {
+            _id: doc.data().userId,
+            name: doc.data().userName
+          }
         }))
       )
     });
-    return () => unsubscribe();
   }, [])
 
   const onSend = useCallback((messages = []) => {
+    console.log("messages", messages)
     setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
     const {
       _id,
@@ -33,21 +48,24 @@ export const Chat = (props) => {
       text,
       user
     } = messages[0]
-    addDoc(collection(db, "chats"), {
+    addDoc(collection(db, "messages"), {
       _id,
+      chatId: props.route.params.chatId,
       createdAt,
       text,
-      user
+      userId: user._id,
+      userName: user.name
     })
   }, [])
+
 
   return (
     <GiftedChat
       messages={messages}
       onSend={messages => onSend(messages)}
       user={{
-        _id: props.route.params.requestData.adopterId,
-        name: props.route.params.requestData.adopterName,
+        _id: props.route.params.userId,
+        name: props.route.params.userName,
       }}
     />
   )

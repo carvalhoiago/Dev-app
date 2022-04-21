@@ -4,7 +4,7 @@ import styles from "./styles"
 
 import { signOut } from "firebase/auth"
 import { auth, db } from "../../../firebase";
-import { doc, setDoc, updateDoc, getDoc } from 'firebase/firestore'
+import { doc, setDoc, updateDoc, getDoc, query, collection, where, getDocs, collectionGroup,addDoc } from 'firebase/firestore'
 import {sendRejectAdoptNotification, sendAceptAdoptNotification} from '../../services/notifications'
 
 import FlatButton from "../../components/InitialScreen/button";
@@ -17,6 +17,8 @@ export const AdoptRequest = (props) => {
     
     const [requestData, setRequestData] = useState({})
     const [requestDeviceId, setRequestDeviceId] = useState('')
+    const [chatId, setChatId] = useState('')
+    const [foundChat, setFoundChat] = useState(false)
 
     useEffect(()=>{
         console.log('id passado pelo deep link ', id)
@@ -59,6 +61,62 @@ export const AdoptRequest = (props) => {
         })
     }
 
+    const openChat = () => {
+        const query1 = query(
+            collection(db, 'chats'), 
+            where('user1', '==', requestData.adopterId),
+            where('user2', '==', requestData.ownerUid)
+        );
+        
+        getDocs(query1).then(querySnapshot1 =>
+        {
+            querySnapshot1.forEach((doc) => {
+                setFoundChat(true)
+                setChatId(doc.id)
+                console.log(doc.id)
+            });
+            if (!foundChat) {
+                const query2 = query(
+                    collection(db, 'chats'), 
+                    where('user2', '==', requestData.adopterId),
+                    where('user1', '==', requestData.ownerUid)
+                );
+                getDocs(query2).then(querySnapshot2 =>
+                {
+                    querySnapshot2.forEach((doc) => {
+                        setFoundChat(true)
+                        setChatId(doc.id)
+                        console.log(doc.id)
+                    });
+                })
+            }
+        })
+        console.log(foundChat)
+
+        if (!foundChat) {
+            addDoc(collection(db, "chats"), {
+                user1: requestData.adopterId,
+                user2: requestData.ownerUid,
+                lastMessage: null,
+              }).then(async value => {
+                setChatId(value.id)
+              }).catch(e => console.log(e))
+        }
+
+        console.log('id do chat', chatId)
+
+        if (chatId !== null)
+            props.navigation.navigate("Chat", 
+                {
+                    requestData : requestData, 
+                    chatId : chatId, 
+                    userName: requestData.adopterName, 
+                    userId: requestData.adopterId
+                } 
+            )
+
+    }
+
     return(
         <View style={styles.container}>
            <Text style={styles.title}>Solicitação de adoçao para o pet {requestData.animalName}</Text>
@@ -79,7 +137,7 @@ export const AdoptRequest = (props) => {
                 text="Rejeitar"
             />
             <FlatButton
-                onPress={() => props.navigation.navigate("Chat", {requestData : requestData, requestDeviceId : requestDeviceId} )}
+                onPress={() => openChat()}
                 text="Chat"
             />
             </>
