@@ -44,9 +44,7 @@ export const MyChats = (props) => {
             getDocs(query2).then(querySnapshot2 =>
             {
                 querySnapshot2.forEach((doc) => {
-                    setFoundChat(true)
-                    setChatId(doc.id)
-                    console.log(doc.id)
+                  setMyChats(old => [...old, doc.id])
                 });
             })
     })
