@@ -105,8 +105,6 @@ export const MyChats = (props) => {
                 onPress={()=>props.navigation.navigate("Chat", 
                   {
                       chatId : chat.id, 
-                      userName: userData.name, 
-                      userId: user.uid
                   } 
                 )}
                 chat={chat.data}

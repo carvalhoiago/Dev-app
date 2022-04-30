@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { GiftedChat } from 'react-native-gifted-chat'
-import { db } from "../../../firebase";
+import { auth, db } from "../../../firebase";
 import {
   collection,
   query,
@@ -9,12 +9,37 @@ import {
   updateDoc,
   onSnapshot,
   doc,
+  getDoc,
   orderBy
 } from "firebase/firestore";
+import { sendMessageNotification } from '../../services/notifications';
 
 export const Chat = (props) => {
 
+  const user = auth.currentUser
   const [messages, setMessages] = useState([]);
+  const [userData, setUserData] = useState({})
+  const [deviceId, setDeviceId] = useState("")
+
+  useEffect(()=>{
+    if(user && user.uid) {
+      const docRef = doc(db, "users", user.uid);
+      getDoc(docRef).then((docSnap)=>{
+        setUserData(docSnap.data())
+      })
+    }
+    getDoc(doc(db, "chats", props.route.params.chatId)).then((chat)=>{
+      if (user.uid === chat.data().user1) {
+        getDoc(doc(db, "users", chat.data().user2)).then((resp)=>{
+          setDeviceId(resp.data().deviceId)
+        })
+      } else {
+        getDoc(doc(db, "users", chat.data().user1)).then((resp)=>{
+          setDeviceId(resp.data().deviceId)
+        })
+      }
+    })
+  },[user])
 
   useEffect(() => {
     const query2 = query(
@@ -55,7 +80,8 @@ export const Chat = (props) => {
     }).then(value => {
       updateDoc(doc(db, "chats", props.route.params.chatId), {
         lastMessage: value.id,
-      })
+      }).catch(e => console.log('error', e))
+      sendMessageNotification(userData.name, text, props.route.params.chatId, deviceId )
     })
     
   }, [])
@@ -66,8 +92,8 @@ export const Chat = (props) => {
       messages={messages}
       onSend={messages => onSend(messages)}
       user={{
-        _id: props.route.params.userId,
-        name: props.route.params.userName,
+        _id: user.uid,
+        name: userData.name,
       }}
     />
   )
