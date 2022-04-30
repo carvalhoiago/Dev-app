@@ -9,6 +9,41 @@ import { doc, setDoc, updateDoc, getDoc, query, collection, where, getDocs, coll
 import FlatButton from "../../components/InitialScreen/button";
 
 
+const ChatBox = ({chat, userId, onPress, key}) => {
+  const [lastMessage, setLastMessage] = useState({})
+  const [name, setName] = useState("")
+
+  useEffect(()=>{
+    console.log("chat", chat)
+    console.log("user", userId)
+    if(chat && userId){
+      let docRefuser = null
+      if (userId === chat.user1) {
+        docRefuser = doc(db, "users", chat.user1);
+      } else {
+        docRefuser = doc(db, "users", chat.user2);
+      }
+      if (docRefuser)
+      getDoc(docRefuser).then((docSnap)=>{
+        setName(docSnap.data().name || '')
+      })
+      const docRef = doc(db, "messages", chat.lastMessage);
+        getDoc(docRef).then((data)=>{
+          console.log('last', data.data().text)
+          setLastMessage(data.data())
+        })
+    }
+  },[chat, userId])
+
+
+  return (
+    <TouchableOpacity onPress={onPress} style={styles.chatBox}>
+      <Text style={styles.userName}>{name}</Text>
+      <Text style={styles.message}>{lastMessage ? ` ${lastMessage.text}` : "..."}</Text>
+    </TouchableOpacity>
+  )
+}
+
 
 export const MyChats = (props) => {
 
@@ -27,6 +62,7 @@ export const MyChats = (props) => {
   },[user])
 
   const getChats = () => {
+    setMyChats([])
     const query1 = query(
         collection(db, 'chats'), 
         where('user1', '==', user.uid),
@@ -35,7 +71,10 @@ export const MyChats = (props) => {
     getDocs(query1).then(querySnapshot1 =>
     {
         querySnapshot1.forEach((doc) => {
-            setMyChats(old => [...old, doc.id])
+            setMyChats(old => [...old, {
+              id: doc.id,
+              data: doc.data(),
+            }])
         });
             const query2 = query(
                 collection(db, 'chats'), 
@@ -44,7 +83,11 @@ export const MyChats = (props) => {
             getDocs(query2).then(querySnapshot2 =>
             {
                 querySnapshot2.forEach((doc) => {
-                  setMyChats(old => [...old, doc.id])
+                  if (doc.data().lastMessage)
+                    setMyChats(old => [...old, {
+                      id: doc.id,
+                      data: doc.data(),
+                    }])
                 });
             })
     })
@@ -57,16 +100,17 @@ export const MyChats = (props) => {
         <View style={styles.container}>
           {myChats.map(chat => {
             return(
-              <FlatButton
-                key={chat}
+              <ChatBox
+                key={chat.id}
                 onPress={()=>props.navigation.navigate("Chat", 
-                {
-                    chatId : chat, 
-                    userName: userData.name, 
-                    userId: user.uid
-                } 
-            )}
-                text={chat}
+                  {
+                      chatId : chat.id, 
+                      userName: userData.name, 
+                      userId: user.uid
+                  } 
+                )}
+                chat={chat.data}
+                userId={user.uid}
               />
             )
           })}

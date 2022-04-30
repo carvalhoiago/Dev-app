@@ -6,19 +6,17 @@ import {
   query,
   where, 
   addDoc,
+  updateDoc,
   onSnapshot,
+  doc,
   orderBy
 } from "firebase/firestore";
 
 export const Chat = (props) => {
 
   const [messages, setMessages] = useState([]);
-  console.log('params: ', props.route.params)
-
-
 
   useEffect(() => {
-    console.log(props.route.params.chatId)
     const query2 = query(
       collection(db, 'messages'), 
       orderBy('createdAt', 'desc'),
@@ -39,8 +37,7 @@ export const Chat = (props) => {
     });
   }, [])
 
-  const onSend = useCallback((messages = []) => {
-    console.log("messages", messages)
+  const onSend = useCallback(async (messages = []) => {
     setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
     const {
       _id,
@@ -55,7 +52,12 @@ export const Chat = (props) => {
       text,
       userId: user._id,
       userName: user.name
+    }).then(value => {
+      updateDoc(doc(db, "chats", props.route.params.chatId), {
+        lastMessage: value.id,
+      })
     })
+    
   }, [])
 
 

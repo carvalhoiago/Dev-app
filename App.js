@@ -65,6 +65,7 @@ export default function App() {
   const config = {
     screens: {
       AdoptRequest: 'adoptrequest/:id',
+      Chat: 'chat/:chatId',
       MyPets: 'mypets',
     },
   };
