@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, LogBox } from "react-native";
 import { useEffect } from 'react';
 import { useFonts, Courgette_400Regular } from "@expo-google-fonts/courgette";
 import AppLoading from "expo-app-loading";
@@ -28,6 +28,8 @@ export default function App() {
   let [fontsLoaded, error] = useFonts({
     Courgette_400Regular,
   });
+
+  LogBox.ignoreLogs(["Setting a timer"]);
 
   useEffect(() => {
     //OneSignal Init Code

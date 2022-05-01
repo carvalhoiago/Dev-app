@@ -20,6 +20,8 @@ export const Chat = (props) => {
   const [messages, setMessages] = useState([]);
   const [userData, setUserData] = useState({})
   const [deviceId, setDeviceId] = useState("")
+  const [notificationStack, setNotificationStack] = useState([]);
+  const [actNot, setActNot] = useState(true);
 
   useEffect(()=>{
     if(user && user.uid) {
@@ -62,6 +64,18 @@ export const Chat = (props) => {
     });
   }, [])
 
+
+  useEffect(()=>{
+    console.log("opa", deviceId, userData.name, notificationStack)
+    if(deviceId !== "" && userData.name !== undefined && notificationStack.length>0){
+    notificationStack.forEach(text => {
+      console.log('mensagem', text)
+      sendMessageNotification(userData.name, text, props.route.params.chatId, deviceId )
+    })
+    setNotificationStack([])
+  }
+  }, [deviceId, actNot, userData, notificationStack])
+
   const onSend = useCallback(async (messages = []) => {
     setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
     const {
@@ -81,10 +95,13 @@ export const Chat = (props) => {
       updateDoc(doc(db, "chats", props.route.params.chatId), {
         lastMessage: value.id,
       }).catch(e => console.log('error', e))
-      sendMessageNotification(userData.name, text, props.route.params.chatId, deviceId )
+      setNotificationStack(old=>[...old, text])
+      setActNot(!actNot)
     })
     
   }, [])
+
+
 
 
   return (

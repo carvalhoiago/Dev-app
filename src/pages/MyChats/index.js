@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react"
 import {View, Text, Image, TouchableOpacity} from "react-native"
 import styles from "./styles"
+import { useIsFocused } from "@react-navigation/native";
 
 import { signOut } from "firebase/auth"
 import { auth, db } from "../../../firebase";
@@ -9,7 +10,7 @@ import { doc, setDoc, updateDoc, getDoc, query, collection, where, getDocs, coll
 import FlatButton from "../../components/InitialScreen/button";
 
 
-const ChatBox = ({chat, userId, onPress, key}) => {
+const ChatBox = ({chat, userId, onPress}) => {
   const [lastMessage, setLastMessage] = useState({})
   const [name, setName] = useState("")
 
@@ -48,6 +49,7 @@ const ChatBox = ({chat, userId, onPress, key}) => {
 export const MyChats = (props) => {
 
   const user = auth.currentUser
+  const isFocused = useIsFocused();
 
   const [userData, setUserData] = useState({})
   const [myChats, setMyChats] = useState([])
@@ -79,6 +81,7 @@ export const MyChats = (props) => {
             const query2 = query(
                 collection(db, 'chats'), 
                 where('user2', '==', user.uid),
+                where('user1', '!=', user.uid),
             );
             getDocs(query2).then(querySnapshot2 =>
             {
@@ -94,8 +97,8 @@ export const MyChats = (props) => {
   }
 
   useEffect(()=>{
-    getChats()
-  },[])
+    if(isFocused) getChats()
+  },[isFocused])
     return(
         <View style={styles.container}>
           {myChats.map(chat => {
