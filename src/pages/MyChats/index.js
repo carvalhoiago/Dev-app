@@ -20,9 +20,9 @@ const ChatBox = ({chat, userId, onPress}) => {
     if(chat && chat.user1 && chat.user2 && chat.lastMessage && userId){
       let docRefuser = null
       if (userId === chat.user1) {
-        docRefuser = doc(db, "users", chat.user1);
-      } else {
         docRefuser = doc(db, "users", chat.user2);
+      } else {
+        docRefuser = doc(db, "users", chat.user1);
       }
       if (docRefuser)
       getDoc(docRefuser).then((docSnap)=>{
@@ -82,7 +82,6 @@ export const MyChats = (props) => {
             const query2 = query(
                 collection(db, 'chats'), 
                 where('user2', '==', user.uid),
-                where('user1', '!=', user.uid),
             );
             getDocs(query2).then(querySnapshot2 =>
             {
