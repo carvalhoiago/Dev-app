@@ -17,11 +17,10 @@ export const AdoptRequest = (props) => {
     
     const [requestData, setRequestData] = useState({})
     const [requestDeviceId, setRequestDeviceId] = useState('')
-    const [chatId, setChatId] = useState('')
+    const [chatId, setChatId] = useState(null)
     const [foundChat, setFoundChat] = useState(false)
 
     useEffect(()=>{
-        console.log('id passado pelo deep link ', id)
         const docRef = doc(db, "adoptionrequests", id);
         getDoc(docRef).then((docSnap)=>{
             setRequestData(docSnap.data())
@@ -73,7 +72,6 @@ export const AdoptRequest = (props) => {
             querySnapshot1.forEach((doc) => {
                 setFoundChat(true)
                 setChatId(doc.id)
-                console.log(doc.id)
             });
             if (!foundChat) {
                 const query2 = query(
@@ -86,32 +84,26 @@ export const AdoptRequest = (props) => {
                     querySnapshot2.forEach((doc) => {
                         setFoundChat(true)
                         setChatId(doc.id)
-                        console.log(doc.id)
                     });
                 })
             }
         })
-        console.log(foundChat)
 
         if (!foundChat) {
             addDoc(collection(db, "chats"), {
                 user1: requestData.adopterId,
                 user2: requestData.ownerUid,
                 lastMessage: null,
-              }).then(async value => {
+              }).then(value => {
                 setChatId(value.id)
-              }).catch(e => console.log(e))
+              }).catch(e => console.log('erro ao criar chat', e))
         }
 
-        console.log('id do chat', chatId)
 
-        if (chatId !== null)
+        if (chatId !== null && chatId !== '')
             props.navigation.navigate("Chat", 
                 {
-                    requestData : requestData, 
                     chatId : chatId, 
-                    userName: requestData.adopterName, 
-                    userId: requestData.adopterId
                 } 
             )
 

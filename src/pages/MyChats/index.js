@@ -17,7 +17,7 @@ const ChatBox = ({chat, userId, onPress}) => {
   useEffect(()=>{
     console.log("chat", chat)
     console.log("user", userId)
-    if(chat && userId){
+    if(chat && chat.user1 && chat.user2 && chat.lastMessage && userId){
       let docRefuser = null
       if (userId === chat.user1) {
         docRefuser = doc(db, "users", chat.user1);
@@ -73,6 +73,7 @@ export const MyChats = (props) => {
     getDocs(query1).then(querySnapshot1 =>
     {
         querySnapshot1.forEach((doc) => {
+          if (doc.data().lastMessage)
             setMyChats(old => [...old, {
               id: doc.id,
               data: doc.data(),
@@ -97,8 +98,8 @@ export const MyChats = (props) => {
   }
 
   useEffect(()=>{
-    if(isFocused) getChats()
-  },[isFocused])
+    if(isFocused && user && user.uid) getChats()
+  },[isFocused, user])
     return(
         <View style={styles.container}>
           {myChats.map(chat => {

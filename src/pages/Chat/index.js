@@ -23,31 +23,39 @@ export const Chat = (props) => {
   const [notificationStack, setNotificationStack] = useState([]);
   const [actNot, setActNot] = useState(true);
 
+  const chatId = props.route.params.chatId;
+
   useEffect(()=>{
     if(user && user.uid) {
       const docRef = doc(db, "users", user.uid);
       getDoc(docRef).then((docSnap)=>{
         setUserData(docSnap.data())
-      })
+      }).catch(e=>console.log("erro no get user data", e))  
     }
+    
+  },[user])
+
+  useEffect(()=>{
+    if (user && user.uid && chatId )
     getDoc(doc(db, "chats", props.route.params.chatId)).then((chat)=>{
       if (user.uid === chat.data().user1) {
         getDoc(doc(db, "users", chat.data().user2)).then((resp)=>{
           setDeviceId(resp.data().deviceId)
-        })
+        }).catch(e=>console.log("erro no get user2", e))
       } else {
         getDoc(doc(db, "users", chat.data().user1)).then((resp)=>{
           setDeviceId(resp.data().deviceId)
-        })
+        }).catch(e=>console.log("erro no get chat", e))
       }
-    })
-  },[user])
+    }).catch(e=>console.log("erro no get user1", e))
+  }, [user, chatId])
 
   useEffect(() => {
     const query2 = query(
-      collection(db, 'messages'), 
+      collection(db, 'messages'),
+      where("chatId", "==", props.route.params.chatId),
       orderBy('createdAt', 'desc'),
-      where("chatId", "==", props.route.params.chatId)
+      
   );
     const unsubscribe = onSnapshot(query2, snapshot => {
       setMessages(
@@ -66,10 +74,8 @@ export const Chat = (props) => {
 
 
   useEffect(()=>{
-    console.log("opa", deviceId, userData.name, notificationStack)
     if(deviceId !== "" && userData.name !== undefined && notificationStack.length>0){
     notificationStack.forEach(text => {
-      console.log('mensagem', text)
       sendMessageNotification(userData.name, text, props.route.params.chatId, deviceId )
     })
     setNotificationStack([])
