@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Image, Text, ScrollView, View, TouchableOpacity } from "react-native";
+import {Alert, Image, Text, ScrollView, View, TouchableOpacity } from "react-native";
 import styles from "./styles";
 import { db } from "../../../firebase";
 import { auth } from "../../../firebase";

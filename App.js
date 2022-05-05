@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, LogBox } from "react-native";
 import { useEffect } from 'react';
 import { useFonts, Courgette_400Regular } from "@expo-google-fonts/courgette";
 import AppLoading from "expo-app-loading";
@@ -14,21 +14,22 @@ import { MyPets } from "./src/pages/MyPets";
 import { MyPetsDetails } from "./src/pages/MyPetsDetails";
 import { Adopt } from "./src/pages/Adopt";
 import { AdoptRequest } from "./src/pages/AdoptRequest";
+import { Chat } from "./src/pages/Chat";
+import { MyChats } from "./src/pages/MyChats";
 import OneSignal from 'react-native-onesignal';
 
 import { registerRootComponent } from 'expo';
 
 import * as Linking from 'expo-linking';
 
-
 const Stack = createNativeStackNavigator();
-
-
 
 export default function App() {
   let [fontsLoaded, error] = useFonts({
     Courgette_400Regular,
   });
+
+  LogBox.ignoreLogs(["Setting a timer"]);
 
   useEffect(() => {
     //OneSignal Init Code
@@ -39,14 +40,14 @@ export default function App() {
     //Method for handling notifications received while app in foreground
     OneSignal.setNotificationWillShowInForegroundHandler(
       notificationReceivedEvent => {
-        console.log(
-          'OneSignal: notification will show in foreground:',
-          notificationReceivedEvent,
-        );
+        // console.log(
+        //   'OneSignal: notification will show in foreground:',
+        //   notificationReceivedEvent,
+        // );
         const notification = notificationReceivedEvent.getNotification();
-        console.log('notification: ', notification);
+        // console.log('notification: ', notification);
         const data = notification.additionalData;
-        console.log('additionalData: ', data);
+        //console.log('additionalData: ', data);
         // Complete with null means don't show a notification.
         notificationReceivedEvent.complete(notification);
       },
@@ -54,7 +55,7 @@ export default function App() {
 
     //Method for handling notifications opened
     OneSignal.setNotificationOpenedHandler(async openedEvent => {
-      console.log('OneSignal: notification opened:', openedEvent);
+      //console.log('OneSignal: notification opened:', openedEvent);
     });
 
   }, []);
@@ -66,6 +67,7 @@ export default function App() {
   const config = {
     screens: {
       AdoptRequest: 'adoptrequest/:id',
+      Chat: 'chat/:chatId',
       MyPets: 'mypets',
     },
   };
@@ -131,6 +133,20 @@ export default function App() {
             title: "Solicitação de Adoção",
           }}
           component={AdoptRequest}
+        />
+        <Stack.Screen
+          name="Chat"
+          options={{
+            title: "Chat",
+          }}
+          component={Chat}
+        />
+        <Stack.Screen
+          name="MyChats"
+          options={{
+            title: "Meus Chats",
+          }}
+          component={MyChats}
         />
       </Stack.Navigator>
     </NavigationContainer>

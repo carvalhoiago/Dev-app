@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     },
     title: {
         paddingLeft: 12,
-        fontSize: 40,
+        fontSize: 30,
         marginTop: 56,
         textAlign: 'center',
         fontFamily:'Courgette_400Regular',
@@ -22,8 +22,7 @@ const styles = StyleSheet.create({
         color: '#757575'
     },
     logo: {
-        marginTop: 68,
-        marginBottom: 32,
+        marginTop: 10,
         width: 122,
         height: 44
     },
